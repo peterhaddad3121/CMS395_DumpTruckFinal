@@ -38,7 +38,7 @@ public class Simulation {
 		
 		this.travelTimes = distributionFactory.createNormal(58, 10);
 		this.weighingTime = (Distribution) distributionFactory.createDiscreteEmpiricalDistribution(WEIGHING_TIME, WEIGHING_PROBABILITY);
-		this.loadingTime = (Distribution) distributionFactory.createDiscreteEmpiricalDistribution(WEIGHING_TIME, LOADING_PROBABILITY);
+		this.loadingTime = (Distribution) distributionFactory.createDiscreteEmpiricalDistribution(LOADING_TIME, LOADING_PROBABILITY);
 	}
 	
 	/**
