@@ -1,18 +1,13 @@
 public class Event implements Comparable
 {
-	// private static customerNumber = 1;
-	public final static int CALL = 1;
-	public final static int COMPLETE = 2;
-	public final static int END = 3;
+	
 
 	private int eventType;
-	private int callType;
 	private double eventTime;
 
 	public Event(int eventType, int callType, double eventTime)
 	{
 		this.eventType = eventType;
-		this.callType = callType;
 		this.eventTime = eventTime;
 	}
 
@@ -26,10 +21,6 @@ public class Event implements Comparable
 		return this.eventTime;
 	}
 
-	public int getCallType()
-	{
-		return this.callType;
-	}
 
 	@Override
 	public int compareTo(Object otherEvent)
@@ -45,10 +36,7 @@ public class Event implements Comparable
 	@Override
 	public String toString()
 	{
-		String s = "(CALL, ";
-		if (this.eventType == COMPLETE)
-			s = "(DONE, ";
-		s = String.format(s + "%d, %.3f)", this.getCallType(), this.getEventTime());
-		return s;
+		return null;
+		
 	}
 }
