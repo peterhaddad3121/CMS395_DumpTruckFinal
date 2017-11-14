@@ -42,13 +42,29 @@ public class Simulation {
 	}
 	
 	/**
+	 * Processes the event.
+	 * @param event
+	 */
+	public void processEvent(Event event) {
+		//Arrival Loading
+		//Arrival Waiting
+	}
+	
+	/**
+	 * Schedule the next event.
+	 * @param event
+	 */
+	public void scheduleEvent(Event event) {
+		
+	}
+	
+	
+	/**
 	 * Start of the simulation.
 	 */
 	public void startSimulation() {
 		
-		do {
-			
-		}while(DO STUFF);
+		//While loop
 	}
 	
 	/**
