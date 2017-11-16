@@ -1,11 +1,14 @@
 public class Event implements Comparable
 {
 	
+	public static final int LOADING = 0;
+	public static final int WEIGHING = 1;
+	public static final int TRAVEL = 2;
 
 	private int eventType;
 	private double eventTime;
 
-	public Event(int eventType, int callType, double eventTime)
+	public Event(int eventType, double eventTime)
 	{
 		this.eventType = eventType;
 		this.eventTime = eventTime;

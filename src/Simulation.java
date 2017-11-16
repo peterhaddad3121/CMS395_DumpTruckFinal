@@ -1,3 +1,6 @@
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 import generalSimulation.Distribution;
 import generalSimulation.DistributionFactory;
 
@@ -12,6 +15,9 @@ public class Simulation {
 	private Distribution travelTimes;
 	private Distribution weighingTime;
 	private Distribution loadingTime;
+	
+	private Queue<Event> weighingQueue;
+	private Queue<Event> loadingQueue;
 	
 	private double clock = 0;
 	private int numberOfCalls = 1000;
@@ -39,6 +45,17 @@ public class Simulation {
 		this.travelTimes = distributionFactory.createNormal(58, 10);
 		this.weighingTime = (Distribution) distributionFactory.createDiscreteEmpiricalDistribution(WEIGHING_TIME, WEIGHING_PROBABILITY);
 		this.loadingTime = (Distribution) distributionFactory.createDiscreteEmpiricalDistribution(LOADING_TIME, LOADING_PROBABILITY);
+		
+		this.loadingQueue = new PriorityQueue<Event>();
+		this.weighingQueue = new PriorityQueue<Event>();
+		
+		Event truckOne = new Event(Event.LOADING, this.loadingTime.getNext());
+		Event truckTwo = new Event(Event.LOADING, this.loadingTime.getNext());
+		
+		this.loadingQueue.add(truckOne);
+		this.loadingQueue.add(truckTwo);
+		
+		
 	}
 	
 	/**
