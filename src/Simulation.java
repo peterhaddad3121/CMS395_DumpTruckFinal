@@ -13,7 +13,7 @@ import generalSimulation.DistributionFactory;
 
 public class Simulation {
 	
-	private Distribution travelTimes;
+	private Distribution travelTime;
 	private DiscreteDistribution weighingTime;
 	private DiscreteDistribution loadingTime;
 	
@@ -51,7 +51,7 @@ public class Simulation {
 	public Simulation() {
 		DistributionFactory distributionFactory = new DistributionFactory(12345);
 		
-		this.travelTimes = distributionFactory.createNormal(58, 10);
+		this.travelTime = distributionFactory.createNormal(58, 10);
 		this.weighingTime = distributionFactory.createDiscreteEmpiricalDistribution(WEIGHING_TIME, WEIGHING_PROBABILITY);
 		this.loadingTime = distributionFactory.createDiscreteEmpiricalDistribution(LOADING_TIME, LOADING_PROBABILITY);
 		
@@ -98,11 +98,11 @@ public class Simulation {
 	 */
 	public void scheduleCompletion(int eventType) {
 		if (eventType == Event.LOADING) {
-			this.eventList.addEvent(new Event(Event.WEIGHING, this.clock + this.loadingTime.getNext()));
-		}else if (eventType == Event.WEIGHING) {
-			this.eventList.addEvent(new Event(Event.TRAVEL, this.clock + this.travelTimes.getNext()));
-		}else{
 			this.eventList.addEvent(new Event(Event.LOADING, this.clock + this.loadingTime.getNext()));
+		}else if (eventType == Event.WEIGHING) {
+			this.eventList.addEvent(new Event(Event.WEIGHING, this.clock + this.weighingTime.getNext()));
+		}else{
+			this.eventList.addEvent(new Event(Event.TRAVEL, this.clock + this.travelTime.getNext()));
 		}
 	}
 	
