@@ -24,7 +24,6 @@ public class Simulation {
 	private EventList eventList;
 	
 	private double clock = 0;
-	private final int TOTAL_TRIPS = 1000;
 	private int numberOfTrips = 0;
 	
 	private final int NUM_OF_LOADERS = 2;
@@ -119,6 +118,8 @@ public class Simulation {
 			this.numberOfWeighersInUse--;
 		else if (event.getEventType() == Event.COMPLETE_LOAD)
 			this.numberOfLoadersInUse--;
+		else if (event.getEventType() == Event.COMPLETE_TRAVEL)
+			this.numberOfTrips ++;
 		
 		if (!this.loadingQueue.isEmpty()) {
 			Event nextLoading = this.loadingQueue.poll();
@@ -129,8 +130,6 @@ public class Simulation {
 			stats.incrementWeighCallsInQueue(this.clock - nextWeighing.getEventTime());
 			processWeighingEvent(nextWeighing);
 		}
-		
-		this.numberOfTrips ++;		
 	}
 	
 	
@@ -139,10 +138,10 @@ public class Simulation {
 	 */
 	public void startSimulation() {
 		
-		while (this.TOTAL_TRIPS > this.numberOfTrips || this.loadingQueue.isEmpty() & this.weighingQueue.isEmpty()) {
+		while (this.clock <= 1000 || this.loadingQueue.isEmpty() & this.weighingQueue.isEmpty()) {
 			Event event = this.eventList.getImminentEvent();
 			this.clock = event.getEventTime();
-			
+						
 			if (event.getEventType() == Event.LOAD && this.numberOfLoadersInUse < this.NUM_OF_LOADERS) {
 				processLoadingEvent(event);
 			}else if (event.getEventType() == Event.WEIGH && this.numberOfWeighersInUse < this.NUM_OF_WEIGHERS) {

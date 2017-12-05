@@ -21,7 +21,6 @@ public class Statistics
 
 	private int totalCallsInQueue = 0;
 	private double totalTimeInQueue = 0;
-	private double maxTimeInQueue = 0;
 
 	public Statistics(String name)
 	{
@@ -82,6 +81,13 @@ public class Statistics
 		this.totalTimeInWeighQueue += time;
 		this.totalTimeInQueue += time;
 	}
+	
+	public double maxTimeInQueue() {
+		if(this.maxTimeInLoadQueue > this.maxTimeInWeighQueue)
+			return this.maxTimeInLoadQueue;
+		else
+			return this.maxTimeInWeighQueue;
+	}
 
 	public void reportGeneration()
 	{
@@ -124,7 +130,7 @@ public class Statistics
 		System.out.println(String.format("The average time spent is queue for all events was: %.2f minutes",
 				this.totalTimeInQueue / this.totalCallsInQueue));
 		System.out.println(String.format("The maximum time spent is queue for all events was: %.2f minutes\n",
-				this.maxTimeInQueue));
+				this.maxTimeInQueue()));
 		System.out.println(String.format("The total number of events in queue: " + 
 				this.totalCallsInQueue));
 	}
