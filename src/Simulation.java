@@ -58,11 +58,11 @@ public class Simulation {
 		// Start simulation off with 2 trucks loading and rest in loading queue.
 		double loadTime = this.loadingTime.getNext();
 		this.stats.incrementLoadCalls(loadTime);
-		Event truckOne = new Event(Event.LOAD, this.clock + loadTime);
+		Event truckOne = new Event(Event.LOAD, loadTime);
 		
 		loadTime = this.loadingTime.getNext();
 		this.stats.incrementLoadCalls(loadTime);
-		Event truckTwo = new Event(Event.LOAD, this.clock + loadTime);
+		Event truckTwo = new Event(Event.LOAD, loadTime);
 		
 		processLoadingEvent(truckOne);
 		processLoadingEvent(truckTwo);
@@ -98,19 +98,19 @@ public class Simulation {
 		
 		if (eventType == Event.LOAD) {
 			callTime = this.clock + this.loadingTime.getNext();
-			this.stats.incrementLoadCalls(callTime);
-			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, this.clock + callTime));
-			this.eventList.addEvent(new Event(Event.WEIGH, this.clock + callTime));
+			this.stats.incrementLoadCalls(callTime - this.clock);
+			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, callTime));
+			this.eventList.addEvent(new Event(Event.WEIGH, callTime));
 		}else if (eventType == Event.WEIGH) {
 			callTime = this.clock + this.weighingTime.getNext();
-			this.stats.incrementWeighCalls(callTime);
-			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, this.clock + callTime));
-			this.eventList.addEvent(new Event(Event.TRAVEL, this.clock + callTime));
+			this.stats.incrementWeighCalls(callTime - this.clock);
+			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, callTime));
+			this.eventList.addEvent(new Event(Event.TRAVEL, callTime));
 		}else{
 			callTime = this.clock + this.travelTime.getNext();
-			this.stats.incrementTravelCalls(callTime);
-			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, this.clock + callTime));
-			this.eventList.addEvent(new Event(Event.LOAD, this.clock + callTime));
+			this.stats.incrementTravelCalls(callTime - this.clock);
+			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, callTime));
+			this.eventList.addEvent(new Event(Event.LOAD, callTime));
 		}
 	}
 	

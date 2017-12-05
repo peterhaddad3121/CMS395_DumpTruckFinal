@@ -31,19 +31,19 @@ public class Statistics
 	public void incrementLoadCalls(double time)
 	{
 		this.loadCalls ++;
-		this.loadCalls += time;
+		this.totalLoadTime += time;
 	}
 
 	public void incrementWeighCalls(double time)
 	{
 		this.weighCalls ++;
-		this.weighCalls += time;
+		this.totalWeighTime += time;
 	}
 
 	public void incrementTravelCalls(double time)
 	{
 		this.travelCalls ++;
-		this.travelCalls += time;
+		this.totalTravelTime += time;
 	}
 
 	public void setTotalTime(double time)
@@ -68,7 +68,7 @@ public class Statistics
 			this.maxTimeInLoadQueue = time;
 		
 		this.totalTimeInLoadQueue += time;
-		this.totalTimeInQueue =+ time;
+		this.totalTimeInQueue += time;
 	}
 
 
@@ -80,7 +80,7 @@ public class Statistics
 			this.maxTimeInWeighQueue = time;
 		
 		this.totalTimeInWeighQueue += time;
-		this.totalTimeInQueue =+ time;
+		this.totalTimeInQueue += time;
 	}
 
 	public void reportGeneration()
