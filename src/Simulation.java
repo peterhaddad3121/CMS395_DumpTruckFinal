@@ -22,8 +22,8 @@ public class Simulation {
 	private EventList eventList;
 	
 	private double clock = 0;
-	private final int TOTAL_CALLS = 1000;
-	private int numberOfCalls = 0;
+	private final int TOTAL_TRIPS = 1000;
+	private int numberOfTrips = 0;
 	
 	private final int NUM_OF_LOADERS = 2;
 	private final int NUM_OF_WEIGHERS = 1;
@@ -118,11 +118,11 @@ public class Simulation {
 	public void processCompletion(Event event) {
 		System.out.println("Processing the completion of event: " + event.toString());
 		
-		if (event.getEventType() == Event.WEIGH) {
+		if (event.getEventType() == Event.COMPLETE_WEIGH) {
 			System.out.println("Finished weighing");
 			this.numberOfWeighersInUse--;
 			
-		}else if (event.getEventType() == Event.LOAD) {
+		}else if (event.getEventType() == Event.COMPLETE_LOAD) {
 			System.out.println("Finished loading");
 
 			this.numberOfLoadersInUse--;
@@ -135,6 +135,8 @@ public class Simulation {
 			Event nextWeighing = this.weighingQueue.poll();
 			processWeighingEvent(nextWeighing);
 		}
+		
+		this.numberOfTrips ++;
 		
 		//Update other stats.
 	}
@@ -151,10 +153,11 @@ public class Simulation {
 		System.out.println("Current status of weighing queue: " + this.weighingQueue.toString());
 		System.out.println("SIM STARTS\n");
 		
-		while (this.TOTAL_CALLS > this.numberOfCalls) {
+		while (this.TOTAL_TRIPS > this.numberOfTrips || this.loadingQueue.isEmpty() & this.weighingQueue.isEmpty()) {
 			Event event = this.eventList.getImminentEvent();
 			this.clock = event.getEventTime();
 			
+			System.out.println("Number of Calls " + this.numberOfTrips);
 			System.out.println("Current Time = " + this.clock);
 			System.out.println("Current event type is: (0-Loading, 1-Weighing, 2-Traveling) " + event.getEventType());
 			System.out.println(this.eventList.toString());
@@ -173,7 +176,10 @@ public class Simulation {
 				System.out.println("Processing Travel Event");
 
 				processTravelEvent(event);
-			}else{
+			}else if (event.getEventType() >= 3) {
+				processCompletion(event);
+			}
+			else{
 				if (event.getEventType() == Event.LOAD) {
 					System.out.println("Adding to Loading Queue");
 
