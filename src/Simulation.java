@@ -59,8 +59,8 @@ public class Simulation {
 		this.weighingQueue = new PriorityQueue<Event>();
 		this.eventList = new EventList();
 		
-		Event truckOne = new Event(Event.LOADING, this.loadingTime.getNext());
-		Event truckTwo = new Event(Event.LOADING, this.loadingTime.getNext());
+		Event truckOne = new Event(Event.LOAD, this.loadingTime.getNext());
+		Event truckTwo = new Event(Event.LOAD, this.loadingTime.getNext());
 		
 		processLoadingEvent(truckOne);
 		processLoadingEvent(truckTwo);
@@ -71,21 +71,20 @@ public class Simulation {
 		
 	}
 	
-	public void processWeighingEvent(Event event) {
-		this.numberOfWeighersInUse++;
-		
-		this.scheduleCompletion(event.getEventType());
-	}
-	
 	/**
 	 * Processes the event.
 	 * @param event
 	 */
 	public void processLoadingEvent(Event event) {
 		this.numberOfLoadersInUse++;
-		
+		System.out.println("Started loading");
+		this.scheduleCompletion(event.getEventType());		
+	}
+	
+	public void processWeighingEvent(Event event) {
+		this.numberOfWeighersInUse++;
+		System.out.println("Started weighing");
 		this.scheduleCompletion(event.getEventType());
-		
 	}
 	
 	public void processTravelEvent(Event event) {
@@ -97,20 +96,35 @@ public class Simulation {
 	 * @param event
 	 */
 	public void scheduleCompletion(int eventType) {
-		if (eventType == Event.LOADING) {
-			this.eventList.addEvent(new Event(Event.LOADING, this.clock + this.loadingTime.getNext()));
-		}else if (eventType == Event.WEIGHING) {
-			this.eventList.addEvent(new Event(Event.WEIGHING, this.clock + this.weighingTime.getNext()));
+		System.out.println("Scheduling the completion of an event with type: " + eventType);
+		
+		double callTime;
+		
+		if (eventType == Event.LOAD) {
+			callTime = this.clock + this.loadingTime.getNext();
+			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, callTime));
+			this.eventList.addEvent(new Event(Event.WEIGH, callTime));
+		}else if (eventType == Event.WEIGH) {
+			callTime = this.clock + this.weighingTime.getNext();
+			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, callTime));
+			this.eventList.addEvent(new Event(Event.TRAVEL, callTime));
 		}else{
-			this.eventList.addEvent(new Event(Event.TRAVEL, this.clock + this.travelTime.getNext()));
+			callTime = this.clock + this.travelTime.getNext();
+			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, callTime));
+			this.eventList.addEvent(new Event(Event.LOAD, callTime));
 		}
 	}
 	
 	public void processCompletion(Event event) {
+		System.out.println("Processing the completion of event: " + event.toString());
 		
-		if (event.getEventType() == Event.WEIGHING) {
+		if (event.getEventType() == Event.WEIGH) {
+			System.out.println("Finished weighing");
 			this.numberOfWeighersInUse--;
-		}else if (event.getEventType() == Event.LOADING) {
+			
+		}else if (event.getEventType() == Event.LOAD) {
+			System.out.println("Finished loading");
+
 			this.numberOfLoadersInUse--;
 		}
 		
@@ -131,21 +145,42 @@ public class Simulation {
 	 */
 	public void startSimulation() {
 		
+		System.out.println("BEFORE SIM STARTS:");
+		System.out.println(this.eventList.toString());
+		System.out.println("Current status of loading queue: " + this.loadingQueue.toString());
+		System.out.println("Current status of weighing queue: " + this.weighingQueue.toString());
+		System.out.println("SIM STARTS\n");
+		
 		while (this.TOTAL_CALLS > this.numberOfCalls) {
 			Event event = this.eventList.getImminentEvent();
+			this.clock = event.getEventTime();
 			
-			System.out.println(event.getEventType());
+			System.out.println("Current Time = " + this.clock);
+			System.out.println("Current event type is: (0-Loading, 1-Weighing, 2-Traveling) " + event.getEventType());
+			System.out.println(this.eventList.toString());
+			System.out.println("Current status of loading queue: " + this.loadingQueue.toString());
+			System.out.println("Current status of weighing queue: " + this.weighingQueue.toString() + "\n");
+
 			
-			if (event.getEventType() == Event.LOADING && this.numberOfLoadersInUse < this.NUM_OF_LOADERS) {
+			if (event.getEventType() == Event.LOAD && this.numberOfLoadersInUse < this.NUM_OF_LOADERS) {
+				System.out.println("Processing Loading Event");
 				processLoadingEvent(event);
-			}else if (event.getEventType() == Event.WEIGHING && this.numberOfWeighersInUse < this.NUM_OF_WEIGHERS) {
+			}else if (event.getEventType() == Event.WEIGH && this.numberOfWeighersInUse < this.NUM_OF_WEIGHERS) {
+				System.out.println("Processing Weighing Event");
+
 				processWeighingEvent(event);
 			}else if (event.getEventType() == Event.TRAVEL) {
-				processCompletion(event);
+				System.out.println("Processing Travel Event");
+
+				processTravelEvent(event);
 			}else{
-				if (event.getEventTime() == Event.LOADING) {
+				if (event.getEventType() == Event.LOAD) {
+					System.out.println("Adding to Loading Queue");
+
 					this.loadingQueue.add(event);
-				}else{
+				}else if(event.getEventType() == Event.WEIGH){
+					System.out.println("Adding to Weighing Queue");
+
 					this.weighingQueue.add(event);
 				}
 			}

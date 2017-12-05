@@ -1,9 +1,13 @@
 public class Event implements Comparable
 {
 	
-	public static final int LOADING = 0;
-	public static final int WEIGHING = 1;
+	public static final int LOAD = 0;
+	public static final int WEIGH = 1;
 	public static final int TRAVEL = 2;
+	
+	public static final int COMPLETE_LOAD = 3;
+	public static final int COMPLETE_WEIGH = 4;
+	public static final int COMPLETE_TRAVEL = 5;
 
 	private int eventType;
 	private double eventTime;
@@ -39,7 +43,6 @@ public class Event implements Comparable
 	@Override
 	public String toString()
 	{
-		return null;
-		
+		return "(" + eventType + " " + eventTime + ")";
 	}
 }
