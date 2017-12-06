@@ -25,6 +25,10 @@ public class EventList
 		this.removeEvent();
 		return event;
 	}
+	
+	public boolean isEmpty() {
+		return this.events.isEmpty();
+	}
 
 	@Override
 	public String toString()

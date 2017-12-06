@@ -2,10 +2,10 @@ public class Statistics
 {
 	private String name;
 	
-	private int totalCalls = 0;
-	private int loadCalls = 0;
-	private int weighCalls = 0;
-	private int travelCalls = 0;
+	private int totalEvents = 0;
+	private int loadEvents = 0;
+	private int weighEvents = 0;
+	private int travelEvents = 0;
 	private double totalTime = 0;
 	private double totalLoadTime = 0;
 	private double totalWeighTime = 0;
@@ -14,12 +14,12 @@ public class Statistics
 	// Extra Variables
 	private double totalTimeInLoadQueue = 0;
 	private double maxTimeInLoadQueue = 0;
-	private int totalCallsInLoadQueue = 0;
+	private int totalEventsInLoadQueue = 0;
 	private double totalTimeInWeighQueue = 0;
 	private double maxTimeInWeighQueue = 0;
-	private int totalCallsInWeighQueue = 0;
+	private int totalEventsInWeighQueue = 0;
 
-	private int totalCallsInQueue = 0;
+	private int totalEventsInQueue = 0;
 	private double totalTimeInQueue = 0;
 
 	public Statistics(String name)
@@ -27,21 +27,21 @@ public class Statistics
 		this.name = name;
 	}
 
-	public void incrementLoadCalls(double time)
+	public void incrementLoadEvents(double time)
 	{
-		this.loadCalls ++;
+		this.loadEvents ++;
 		this.totalLoadTime += time;
 	}
 
-	public void incrementWeighCalls(double time)
+	public void incrementWeighEvents(double time)
 	{
-		this.weighCalls ++;
+		this.weighEvents ++;
 		this.totalWeighTime += time;
 	}
 
-	public void incrementTravelCalls(double time)
+	public void incrementTravelEvents(double time)
 	{
-		this.travelCalls ++;
+		this.travelEvents ++;
 		this.totalTravelTime += time;
 	}
 
@@ -50,18 +50,18 @@ public class Statistics
 		this.totalTime = time;
 	}
 
-	public void setTotalCalls(int calls)
+	public void setTotalEvents(int Events)
 	{
-		this.totalCalls = calls;
+		this.totalEvents = Events;
 	}
 	
 	/**
 	 * Sets the maximum time in false alarms queue as well as adds to total time in queue
 	 * @param time
 	 */
-	public void incrementLoadCallsInQueue(double time){
-		this.totalCallsInLoadQueue ++;
-		this.totalCallsInQueue ++;
+	public void incrementLoadEventsInQueue(double time){
+		this.totalEventsInLoadQueue ++;
+		this.totalEventsInQueue ++;
 		
 		if (time > this.maxTimeInLoadQueue)
 			this.maxTimeInLoadQueue = time;
@@ -71,9 +71,9 @@ public class Statistics
 	}
 
 
-	public void incrementWeighCallsInQueue(double time){
-		this.totalCallsInWeighQueue ++;
-		this.totalCallsInQueue ++;
+	public void incrementWeighEventsInQueue(double time){
+		this.totalEventsInWeighQueue ++;
+		this.totalEventsInQueue ++;
 		
 		if (time > this.maxTimeInWeighQueue)
 			this.maxTimeInWeighQueue = time;
@@ -95,43 +95,43 @@ public class Statistics
 		
 		System.out.println(this.name);
 		System.out.print(String.format("There were %d loads, for a total of %.2f minutes, ",
-				this.loadCalls, this.totalLoadTime));
+				this.loadEvents, this.totalLoadTime));
 		System.out.println(String.format("and average of %.2f minutes per load call.",
-				this.totalLoadTime / this.loadCalls));
+				this.totalLoadTime / this.loadEvents));
 		System.out.println(String.format("The proportion of total time spent loading is %.2f\n",
 				this.totalLoadTime / totalCallTime));
 		
 		System.out.println(String.format("The average time spent in queue for loading was: %.2f minutes",
-				this.totalTimeInLoadQueue / this.totalCallsInLoadQueue));
+				this.totalTimeInLoadQueue / this.totalEventsInLoadQueue));
 		System.out.println(String.format("The maximum time spent in queue for loading was: %.2f minutes\n",
 				this.maxTimeInLoadQueue));
 
 		System.out.print(String.format("There were %d weighing events, for a total of %.2f minutes, ",
-				this.weighCalls, this.totalWeighTime));
+				this.weighEvents, this.totalWeighTime));
 		System.out.println(String.format("and average of %.2f minutes per weighing event.",
-				this.totalWeighTime / this.weighCalls));
+				this.totalWeighTime / this.weighEvents));
 		System.out.println(String.format("The proportion of total time spent on weighing is %.2f\n",
 				this.totalWeighTime / totalCallTime));
 		
 		System.out.println(String.format("The average time spent in queue for weighing was: %.2f minutes",
-				this.totalTimeInWeighQueue / this.totalCallsInWeighQueue));
+				this.totalTimeInWeighQueue / this.totalEventsInWeighQueue));
 		System.out.println(String.format("The maximum time spent in queue for weighing was: %.2f minutes\n",
 				this.maxTimeInWeighQueue));
 
 		System.out.print(String.format("There were %d travel events, for a total of %.2f minutes, ",
-				this.travelCalls, this.totalTravelTime));
+				this.travelEvents, this.totalTravelTime));
 		System.out.println(String.format("and average of %.2f minutes per travel event.",
-				this.totalTravelTime / this.travelCalls));
+				this.totalTravelTime / this.travelEvents));
 		System.out.println(String.format("The proportion of total time spent traveling is %.2f\n",
 				this.totalTravelTime / totalCallTime));
 
-		System.out.println(String.format("There was a total of %d events in %.2f minutes.", this.totalCalls, this.totalTime));
+		System.out.println(String.format("There was a total of %d trips in %.2f minutes.", this.totalEvents, this.totalTime));
 		
 		System.out.println(String.format("The average time spent is queue for all events was: %.2f minutes",
-				this.totalTimeInQueue / this.totalCallsInQueue));
+				this.totalTimeInQueue / this.totalEventsInQueue));
 		System.out.println(String.format("The maximum time spent is queue for all events was: %.2f minutes\n",
 				this.maxTimeInQueue()));
-		System.out.println(String.format("The total number of events in queue: " + 
-				this.totalCallsInQueue));
+		System.out.println(String.format("The total number of events in both queues: " + 
+				this.totalEventsInQueue));
 	}
 }

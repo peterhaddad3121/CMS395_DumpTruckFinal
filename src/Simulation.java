@@ -56,11 +56,11 @@ public class Simulation {
 		
 		// Start simulation off with 2 trucks loading and rest in loading queue.
 		double loadTime = this.loadingTime.getNext();
-		this.stats.incrementLoadCalls(loadTime);
+		this.stats.incrementLoadEvents(loadTime);
 		Event truckOne = new Event(Event.LOAD, loadTime);
 		
 		loadTime = this.loadingTime.getNext();
-		this.stats.incrementLoadCalls(loadTime);
+		this.stats.incrementLoadEvents(loadTime);
 		Event truckTwo = new Event(Event.LOAD, loadTime);
 		
 		processLoadingEvent(truckOne);
@@ -97,17 +97,17 @@ public class Simulation {
 		
 		if (eventType == Event.LOAD) {
 			callTime = this.clock + this.loadingTime.getNext();
-			this.stats.incrementLoadCalls(callTime - this.clock);
+			this.stats.incrementLoadEvents(callTime - this.clock);
 			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, callTime));
 			this.eventList.addEvent(new Event(Event.WEIGH, callTime));
 		}else if (eventType == Event.WEIGH) {
 			callTime = this.clock + this.weighingTime.getNext();
-			this.stats.incrementWeighCalls(callTime - this.clock);
+			this.stats.incrementWeighEvents(callTime - this.clock);
 			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, callTime));
 			this.eventList.addEvent(new Event(Event.TRAVEL, callTime));
 		}else{
 			callTime = this.clock + this.travelTime.getNext();
-			this.stats.incrementTravelCalls(callTime - this.clock);
+			this.stats.incrementTravelEvents(callTime - this.clock);
 			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, callTime));
 			this.eventList.addEvent(new Event(Event.LOAD, callTime));
 		}
@@ -123,26 +123,25 @@ public class Simulation {
 		
 		if (!this.loadingQueue.isEmpty()) {
 			Event nextLoading = this.loadingQueue.poll();
-			stats.incrementLoadCallsInQueue(this.clock - nextLoading.getEventTime());
+			stats.incrementLoadEventsInQueue(this.clock - nextLoading.getEventTime());
 			processLoadingEvent(nextLoading);
 		}else if (!this.weighingQueue.isEmpty()) {
 			Event nextWeighing = this.weighingQueue.poll();
-			stats.incrementWeighCallsInQueue(this.clock - nextWeighing.getEventTime());
+			stats.incrementWeighEventsInQueue(this.clock - nextWeighing.getEventTime());
 			processWeighingEvent(nextWeighing);
 		}
 	}
-	
 	
 	/**
 	 * Start of the simulation.
 	 */
 	public void startSimulation() {
 		
-		while (this.clock <= 1000 || this.loadingQueue.isEmpty() & this.weighingQueue.isEmpty()) {
+		while (this.clock <= 1000 && (!this.loadingQueue.isEmpty() && !this.weighingQueue.isEmpty()) || !this.eventList.isEmpty()) {
 			Event event = this.eventList.getImminentEvent();
 			this.clock = event.getEventTime();
-						
-			if (event.getEventType() == Event.LOAD && this.numberOfLoadersInUse < this.NUM_OF_LOADERS) {
+									
+			if (event.getEventType() == Event.LOAD && this.numberOfLoadersInUse < this.NUM_OF_LOADERS && this.clock <= 1000) {
 				processLoadingEvent(event);
 			}else if (event.getEventType() == Event.WEIGH && this.numberOfWeighersInUse < this.NUM_OF_WEIGHERS) {
 				processWeighingEvent(event);
@@ -152,7 +151,7 @@ public class Simulation {
 				processCompletion(event);
 			}
 			else{
-				if (event.getEventType() == Event.LOAD) {
+				if (event.getEventType() == Event.LOAD && this.clock <= 1000) {
 					this.loadingQueue.add(event);
 				}else if(event.getEventType() == Event.WEIGH){
 					this.weighingQueue.add(event);
@@ -161,7 +160,7 @@ public class Simulation {
 		}
 		
 		this.stats.setTotalTime(this.clock);
-		this.stats.setTotalCalls(this.numberOfTrips);
+		this.stats.setTotalEvents(this.numberOfTrips);
 		this.stats.reportGeneration();
 	}
 	
