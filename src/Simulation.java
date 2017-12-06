@@ -136,8 +136,8 @@ public class Simulation {
 	 * Start of the simulation.
 	 */
 	public void startSimulation() {
-		// Run simulation until all queues are empty of event list is empty
-		while ((!this.loadingQueue.isEmpty() && !this.weighingQueue.isEmpty()) || !this.eventList.isEmpty()) {
+		// Run simulation until all queues and event list are empty
+		while (!this.loadingQueue.isEmpty() || !this.weighingQueue.isEmpty() || !this.eventList.isEmpty()) {
 			Event event = this.eventList.getImminentEvent();
 			this.clock = event.getEventTime();
 									
