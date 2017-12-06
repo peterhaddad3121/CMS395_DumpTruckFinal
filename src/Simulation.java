@@ -75,12 +75,12 @@ public class Simulation {
 	 * @param event
 	 */
 	public void processLoadingEvent(Event event) {
-		this.numberOfLoadersInUse++;
+		this.numberOfLoadersInUse++; // Loading event uses a loader
 		this.scheduleCompletion(event.getEventType());		
 	}
 	
 	public void processWeighingEvent(Event event) {
-		this.numberOfWeighersInUse++;
+		this.numberOfWeighersInUse++; // Weighing event uses a weigher
 		this.scheduleCompletion(event.getEventType());
 	}
 	
@@ -98,18 +98,18 @@ public class Simulation {
 		if (eventType == Event.LOAD) {
 			callTime = this.clock + this.loadingTime.getNext();
 			this.stats.incrementLoadEvents(callTime - this.clock);
-			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, callTime));
-			this.eventList.addEvent(new Event(Event.WEIGH, callTime));
+			this.eventList.addEvent(new Event(Event.COMPLETE_LOAD, callTime)); // Add a completion event to increment available loaders
+			this.eventList.addEvent(new Event(Event.WEIGH, callTime));		 // Add a weighing event because that comes after loading
 		}else if (eventType == Event.WEIGH) {
 			callTime = this.clock + this.weighingTime.getNext();
 			this.stats.incrementWeighEvents(callTime - this.clock);
-			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, callTime));
-			this.eventList.addEvent(new Event(Event.TRAVEL, callTime));
+			this.eventList.addEvent(new Event(Event.COMPLETE_WEIGH, callTime)); // Add a completion event to increment available weighers
+			this.eventList.addEvent(new Event(Event.TRAVEL, callTime));		  // Add a travel event because that comes after weighing
 		}else{
 			callTime = this.clock + this.travelTime.getNext();
 			this.stats.incrementTravelEvents(callTime - this.clock);
-			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, callTime));
-			this.eventList.addEvent(new Event(Event.LOAD, callTime));
+			this.eventList.addEvent(new Event(Event.COMPLETE_TRAVEL, callTime)); // Add a completion event to increment total trips
+			this.eventList.addEvent(new Event(Event.LOAD, callTime));			   // Add a load event because that comes after traveling
 		}
 	}
 	
@@ -121,11 +121,11 @@ public class Simulation {
 		else if (event.getEventType() == Event.COMPLETE_TRAVEL)
 			this.numberOfTrips ++;
 		
-		if (!this.loadingQueue.isEmpty()) {
+		if (!this.loadingQueue.isEmpty()) { // Processes all loading events in queue before event list
 			Event nextLoading = this.loadingQueue.poll();
 			stats.incrementLoadEventsInQueue(this.clock - nextLoading.getEventTime());
 			processLoadingEvent(nextLoading);
-		}else if (!this.weighingQueue.isEmpty()) {
+		}else if (!this.weighingQueue.isEmpty()) { // Processes all weighing events in queue before event list
 			Event nextWeighing = this.weighingQueue.poll();
 			stats.incrementWeighEventsInQueue(this.clock - nextWeighing.getEventTime());
 			processWeighingEvent(nextWeighing);
@@ -136,29 +136,29 @@ public class Simulation {
 	 * Start of the simulation.
 	 */
 	public void startSimulation() {
-		
-		while (this.clock <= 1000 && (!this.loadingQueue.isEmpty() && !this.weighingQueue.isEmpty()) || !this.eventList.isEmpty()) {
+		// Run simulation until all queues are empty of event list is empty
+		while ((!this.loadingQueue.isEmpty() && !this.weighingQueue.isEmpty()) || !this.eventList.isEmpty()) {
 			Event event = this.eventList.getImminentEvent();
 			this.clock = event.getEventTime();
 									
 			if (event.getEventType() == Event.LOAD && this.numberOfLoadersInUse < this.NUM_OF_LOADERS && this.clock <= 1000) {
-				processLoadingEvent(event);
+				processLoadingEvent(event);  // Add loading events to the event list as long as time isn't greater than 1000
 			}else if (event.getEventType() == Event.WEIGH && this.numberOfWeighersInUse < this.NUM_OF_WEIGHERS) {
-				processWeighingEvent(event);
+				processWeighingEvent(event); // Add weighing events to the event list as long as there are loading events that are finishing
 			}else if (event.getEventType() == Event.TRAVEL) {
-				processTravelEvent(event);
+				processTravelEvent(event);   // Add traveling events to event list as long as there are weighing events
 			}else if (event.getEventType() >= 3) {
-				processCompletion(event);
+				processCompletion(event);    // Add completion events to queue until all events are complete
 			}
 			else{
 				if (event.getEventType() == Event.LOAD && this.clock <= 1000) {
-					this.loadingQueue.add(event);
+					this.loadingQueue.add(event); // Add overflow loading events to queue unless time is greater than 1000
 				}else if(event.getEventType() == Event.WEIGH){
-					this.weighingQueue.add(event);
+					this.weighingQueue.add(event); // Add overflow weighing events to queue until there are no more
 				}
 			}
 		}
-		
+		// Printing out statistics
 		this.stats.setTotalTime(this.clock);
 		this.stats.setTotalEvents(this.numberOfTrips);
 		this.stats.reportGeneration();
