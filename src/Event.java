@@ -1,5 +1,7 @@
-public class Event implements Comparable
-{
+/**
+ * Event objects are put into the queues to mark the start/completion of the next event.
+ */
+public class Event implements Comparable{
 	
 	public static final int LOAD = 0;
 	public static final int WEIGH = 1;
@@ -27,7 +29,6 @@ public class Event implements Comparable
 	{
 		return this.eventTime;
 	}
-
 
 	@Override
 	public int compareTo(Object otherEvent)

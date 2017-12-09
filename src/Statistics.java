@@ -1,3 +1,7 @@
+/**
+ * This class holds all the statistics methods necessary for calculating and printing out
+ * the statistics for the dump truck simulation.
+ */
 public class Statistics
 {
 	private String name;
@@ -27,36 +31,62 @@ public class Statistics
 		this.name = name;
 	}
 
+	/**
+	 * Increases total load time and increments number of load events
+	 * 
+	 * @param time
+	 */
 	public void incrementLoadEvents(double time)
 	{
 		this.loadEvents ++;
 		this.totalLoadTime += time;
 	}
 
+	/**
+	 * Increases total weighing time and increments number of weighing events
+	 * 
+	 * @param time
+	 */
 	public void incrementWeighEvents(double time)
 	{
 		this.weighEvents ++;
 		this.totalWeighTime += time;
 	}
 
+	/**
+	 * Increases total travel time and increments number of travel events
+	 * 
+	 * @param time
+	 */
 	public void incrementTravelEvents(double time)
 	{
 		this.travelEvents ++;
 		this.totalTravelTime += time;
 	}
 
+	/**
+	 * Sets the total time the simulation lasted
+	 * 
+	 * @param time
+	 */
 	public void setTotalTime(double time)
 	{
 		this.totalTime = time;
 	}
 
+	/**
+	 * Sets the total number of events that happened in the simulation
+	 * 
+	 * @param Events
+	 */
 	public void setTotalEvents(int Events)
 	{
 		this.totalEvents = Events;
 	}
 	
 	/**
-	 * Sets the maximum time in false alarms queue as well as adds to total time in queue
+	 * Sets the maximum time in all queues and load queue as well as adds to total time in queue and increments number of events
+	 * 
 	 * @param time
 	 */
 	public void incrementLoadEventsInQueue(double time){
@@ -70,7 +100,11 @@ public class Statistics
 		this.totalTimeInQueue += time;
 	}
 
-
+	/**
+	 * Sets the maximum time in all queues and weighing queue as well as adds to total time in queue and increments number of events
+	 * 
+	 * @param time
+	 */
 	public void incrementWeighEventsInQueue(double time){
 		this.totalEventsInWeighQueue ++;
 		this.totalEventsInQueue ++;
@@ -82,6 +116,11 @@ public class Statistics
 		this.totalTimeInQueue += time;
 	}
 	
+	/**
+	 * Returns the maximum time spent in any queue
+	 * 
+	 * @param time
+	 */
 	public double maxTimeInQueue() {
 		if(this.maxTimeInLoadQueue > this.maxTimeInWeighQueue)
 			return this.maxTimeInLoadQueue;
@@ -89,6 +128,9 @@ public class Statistics
 			return this.maxTimeInWeighQueue;
 	}
 
+	/**
+	 * Prints out statistics in a readable format
+	 */
 	public void reportGeneration()
 	{
 		double totalCallTime = this.totalLoadTime + this.totalWeighTime + this.totalTravelTime;

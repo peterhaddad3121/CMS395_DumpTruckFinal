@@ -1,7 +1,9 @@
 import java.util.PriorityQueue;
 
-public class EventList
-{
+/**
+ * Event List objects are priority queues that hold the events in order based on their event time
+ */
+public class EventList {
 	private PriorityQueue<Event> events;
 
 	public EventList()

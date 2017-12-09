@@ -6,11 +6,15 @@ import generalSimulation.Distribution;
 import generalSimulation.DistributionFactory;
 
 /**
+ * Dump Truck Simulation Class
  * 
- * @author peter, lenuel, brandt, rod
- *
+ * Simulates a specified number of dump trucks for a given amount of time
+ * 
+ * Simulates their loading, weighing and traveling events calculating time they spent in queue,
+ * total number of loads, weighs, and travels and the max, total and average time of each.
+ * 
+ * @author Peter, Lenuel, Brandt, Roderick
  */
-
 public class Simulation {
 	
 	private Statistics stats;
@@ -39,7 +43,10 @@ public class Simulation {
 	private final int WEIGHING_TIME[] = {12, 16};
 	
 	/**
-	 * Constructor
+	 * Constructor creates distributionFactory and creates the necessary distributions. 
+	 * Creates the eventLists and queues. Creates stats objects.
+	 * 
+	 * Lastly, starts off the simulation with 2 trucks loading and 4 trucks in the loading queue.
 	 */
 	public Simulation() {
 		DistributionFactory distributionFactory = new DistributionFactory(12345);
@@ -71,7 +78,7 @@ public class Simulation {
 	}
 	
 	/**
-	 * Processes the event.
+	 * Schedule completion of current event type and increment number of loaders in use
 	 * @param event
 	 */
 	public void processLoadingEvent(Event event) {
@@ -79,17 +86,27 @@ public class Simulation {
 		this.scheduleCompletion(event.getEventType());		
 	}
 	
+	/**
+	 * Schedule completion of current event type and increment number of weighers in use
+	 * @param event
+	 */
 	public void processWeighingEvent(Event event) {
 		this.numberOfWeighersInUse++; // Weighing event uses a weigher
 		this.scheduleCompletion(event.getEventType());
 	}
-	
+		
+	/**
+	 * Schedule completion of current event type
+	 * @param event
+	 */
 	public void processTravelEvent(Event event) {
 		this.scheduleCompletion(event.getEventType());
 	}
 	
 	/**
-	 * Schedule the next completion event.
+	 * Schedule the next completion event, and the start of the next type of event afterwards
+	 * Increment stats for each type of event
+	 * 
 	 * @param event
 	 */
 	public void scheduleCompletion(int eventType) {		
@@ -120,6 +137,7 @@ public class Simulation {
 	 * 
 	 * If the weighing or loading queue isn't empty
 	 * calls next event from the given queue
+	 * 
 	 * @param event
 	 */
 	public void processCompletion(Event event) {		
@@ -143,7 +161,8 @@ public class Simulation {
 	}
 	
 	/**
-	 * Start of the simulation.
+	 * Run through the simulation, stops adding loading events at time 1000
+	 * After eventList and queues are empty print stats
 	 */
 	public void startSimulation() {
 		// Run simulation until all queues and event list are empty
