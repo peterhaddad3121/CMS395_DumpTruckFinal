@@ -113,6 +113,15 @@ public class Simulation {
 		}
 	}
 	
+	/**
+	 * When an event is completed this method gets called
+	 * Decrements number of Weighers/Loaders in use if necessary or
+	 * increments number of trips
+	 * 
+	 * If the weighing or loading queue isn't empty
+	 * calls next event from the given queue
+	 * @param event
+	 */
 	public void processCompletion(Event event) {		
 		if (event.getEventType() == Event.COMPLETE_WEIGH) 
 			this.numberOfWeighersInUse--;
@@ -125,7 +134,8 @@ public class Simulation {
 			Event nextLoading = this.loadingQueue.poll();
 			stats.incrementLoadEventsInQueue(this.clock - nextLoading.getEventTime());
 			processLoadingEvent(nextLoading);
-		}else if (!this.weighingQueue.isEmpty()) { // Processes all weighing events in queue before event list
+		}
+		if (!this.weighingQueue.isEmpty()) { // Processes all weighing events in queue before event list
 			Event nextWeighing = this.weighingQueue.poll();
 			stats.incrementWeighEventsInQueue(this.clock - nextWeighing.getEventTime());
 			processWeighingEvent(nextWeighing);
