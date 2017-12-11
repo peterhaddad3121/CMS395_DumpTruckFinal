@@ -13,7 +13,7 @@ import generalSimulation.DistributionFactory;
  * Simulates their loading, weighing and traveling events calculating time they spent in queue,
  * total number of loads, weighs, and travels and the max, total and average time of each.
  * 
- * @author Peter, Lenuel, Brandt, Roderick
+ * @author Peter Haddad, Lemuel Gorion, Brandt Smith and Roderick Zak
  */
 public class Simulation {
 	
